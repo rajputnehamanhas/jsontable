@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html ng-app="myInsured">
+<head>
+<title>Example to display JSON data in a Table using AngularJS?</title>
+ <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootswatch/3.2.0/sandstone/bootstrap.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+   
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.0/angular.min.js"></script>
+<script type="text/javascript">
+var myInsured = angular.module('myInsured', []);
+
+myInsured.controller('insuredCtrl', function($scope, $http) {
+
+ $scope.sortType     = 'Name'; // set the default sort type
+  $scope.sortReverse  = false;  // set the default sort order
+  $scope.searchFish   = ''; 
+
+$http.get("planet.json").success(function (response) {
+/*After Successfully fetch the data from JSON file assigning these data to $scope object variable*/
+$scope.members = response.records;
+});
+});
+
+</script>
+<style type="text/css">
+/*Style for Table*/
+table, th , td {
+border: 1px solid grey;
+border-collapse: collapse;
+padding: 4px;
+font-family: arial;
+}
+/*Style for Table Header*/
+th {
+background: pink;
+color: white;
+text-align: left;
+}
+/*Style for Alternate Rows*/
+table tr:nth-child(odd) {
+background-color: #C2EBC3;
+}
+table tr:nth-child(even) {
+background-color: #FFFFFF;
+}
+</style>
+</head>
+<body >
+<div class="container" ng-controller="insuredCtrl">
+
+ <div class="alert alert-info">
+    <p>Sort Type: {{ sortType }}</p>
+    <p>Sort Reverse: {{ sortReverse }}</p>
+    <p>Search Query: {{ searchFish }}</p>
+  </div>
+
+ <form>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+
+  <input type="text" class="form-control" placeholder="Search Person" ng-model="searchFish">
+
+      </div>      
+    </div>
+  </form> 
+
+<table >
+<tr style="background:pink;">
+<th>
+ <a href="#" ng-click="sortType = 'Name';sortReverse = !sortReverse">Name
+
+ <span ng-show="sortType == 'Name'" class="fa fa-caret-down"></span>
+          </a> </th>
+<th> <a href="#" ng-click="sortType = 'City';sortReverse = !sortReverse">
+          <span ng-show="sortType == 'City'" class="fa fa-caret-down"></span>
+          City
+          </a></th>
+<th><a href="#" ng-click="sortType = 'Country';sortReverse = !sortReverse">
+          <span ng-show="sortType == 'Country'" class="fa fa-caret-down"></span>
+          Country
+          </a></th>
+</tr>
+<tr ng-repeat="indivisual in members | orderBy:sortType:sortReverse | filter:searchFish">
+<td>{{ indivisual.Name }}</td>
+<td>{{ indivisual.City }}</td>
+<td>{{ indivisual.Country }}</td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>
